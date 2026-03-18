@@ -1,0 +1,15 @@
+{
+  "name": "travel-planner-integration-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for Travel Planner",
+  "scripts": {
+    "test:staging": "cucumber-js --require cucumber.conf.js --require step-definitions/**/*.js features/ --env staging",
+    "test:production": "cucumber-js --require cucumber.conf.js --require step-definitions/**/*.js features/ --env production"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^9.0.0",
+    "playwright": "^1.30.0",
+    "axios": "^1.4.0",
+    "chai": "^4.3.7"
+  }
+}
