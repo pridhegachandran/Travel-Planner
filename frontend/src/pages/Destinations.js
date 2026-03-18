@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { destinationsAPI } from '../services/api';
 
 const Destinations = () => {
@@ -17,7 +17,7 @@ const Destinations = () => {
 
   useEffect(() => {
     filterDestinations();
-  }, [destinations, searchQuery, selectedCategory]);
+  }, [filterDestinations]);
 
   const fetchDestinations = async () => {
     try {
@@ -32,7 +32,7 @@ const Destinations = () => {
     }
   };
 
-  const filterDestinations = () => {
+  const filterDestinations = useCallback(() => {
     let filtered = destinations;
 
     // Filter by search query
@@ -50,7 +50,7 @@ const Destinations = () => {
     }
 
     setFilteredDestinations(filtered);
-  };
+  }, [destinations, searchQuery, selectedCategory]);
 
   const handleSearch = (e) => {
     e.preventDefault();
