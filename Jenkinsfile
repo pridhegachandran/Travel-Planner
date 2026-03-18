@@ -1,6 +1,17 @@
 pipeline {
     agent any
 
+    environment {
+        // Get Python executable path dynamically
+        PYTHON_EXE = bat 'py -0p --version 2>nul || echo python'
+        
+        MONGODB_URI = credentials('mongodb-uri')
+        JWT_SECRET_KEY = credentials('jwt-secret')
+        NODE_ENV = 'production'
+        DOCKER_REGISTRY = 'your-docker-registry.com'
+        DOCKER_IMAGE = '${DOCKER_REGISTRY}/travel-planner'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -28,7 +39,7 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    bat 'python -m pip install -r requirements.txt'
+                    bat '"%PYTHON_EXE%" -m pip install -r requirements.txt'
                 }
             }
         }
