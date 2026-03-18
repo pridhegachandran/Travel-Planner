@@ -11,6 +11,26 @@ const Destinations = () => {
 
   const categories = ['all', 'beach', 'mountain', 'city', 'adventure', 'cultural'];
 
+  const filterDestinations = useCallback(() => {
+    let filtered = destinations;
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(dest =>
+        dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dest.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dest.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by category
+    if (selectedCategory && selectedCategory !== 'all') {
+      filtered = filtered.filter(dest => dest.category === selectedCategory);
+    }
+
+    setFilteredDestinations(filtered);
+  }, [destinations, searchQuery, selectedCategory]);
+
   useEffect(() => {
     fetchDestinations();
   }, []);
@@ -31,26 +51,6 @@ const Destinations = () => {
       setLoading(false);
     }
   };
-
-  const filterDestinations = useCallback(() => {
-    let filtered = destinations;
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(dest =>
-        dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dest.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dest.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filter by category
-    if (selectedCategory && selectedCategory !== 'all') {
-      filtered = filtered.filter(dest => dest.category === selectedCategory);
-    }
-
-    setFilteredDestinations(filtered);
-  }, [destinations, searchQuery, selectedCategory]);
 
   const handleSearch = (e) => {
     e.preventDefault();
