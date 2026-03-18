@@ -1,17 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Get Python executable path dynamically
-        PYTHON_EXE = bat 'py -0p --version 2>nul || echo python'
-        
-        MONGODB_URI = credentials('mongodb-uri')
-        JWT_SECRET_KEY = credentials('jwt-secret')
-        NODE_ENV = 'production'
-        DOCKER_REGISTRY = 'your-docker-registry.com'
-        DOCKER_IMAGE = '${DOCKER_REGISTRY}/travel-planner'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -47,7 +36,7 @@ pipeline {
         stage('Backend Check') {
             steps {
                 dir('backend') {
-                    bat 'python --version'
+                    bat 'py --version'
                 }
             }
         }
@@ -58,6 +47,13 @@ pipeline {
                 bat 'if not exist C:\\deploy\\travelplanner-backend mkdir C:\\deploy\\travelplanner-backend'
                 bat 'xcopy /E /I /Y frontend\\* C:\\deploy\\travelplanner-frontend'
                 bat 'xcopy /E /I /Y backend\\* C:\\deploy\\travelplanner-backend'
+            }
+        }
+
+        stage('Test Application') {
+            steps {
+                bat 'cd C:\\deploy\\travelplanner-backend && py -m pytest tests/ -v'
+                bat 'cd C:\\deploy\\travelplanner-frontend && npm test --if-present'
             }
         }
     }
